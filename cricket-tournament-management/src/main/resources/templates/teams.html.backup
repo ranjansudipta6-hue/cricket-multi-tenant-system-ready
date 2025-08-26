@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams - Cricket Tournament Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Cricket Tournament Management System</h1>
+                    <nav>
+                        <a href="/" class="nav-link">Home</a>
+                        <a href="/teams" class="nav-link active">Teams</a>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div class="tenant-selector" th:if="${availableTenants != null and !availableTenants.empty}">
+                        <label for="tenantSelect">Tenant:</label>
+                        <form id="tenantForm" method="post" action="/switch-tenant">
+                            <select id="tenantSelect" name="tenantId" onchange="switchTenant()">
+                                <option th:each="tenant : ${availableTenants}" 
+                                        th:value="${tenant.id}" 
+                                        th:text="${tenant.id}"
+                                        th:selected="${tenant.id == currentTenant}">
+                                    Tenant
+                                </option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="page-header">
+                <h2>Teams</h2>
+                <p>Manage all cricket teams in the tournament</p>
+                <p th:if="${currentTenant}" class="tenant-info">Current Tenant: <strong th:text="${currentTenant}">tenant1</strong></p>
+            </div>
+            
+            <!-- Error Message Display -->
+            <div class="error-message" th:if="${error}" style="background: #f8d7da; color: #721c24; padding: 1rem; border-radius: 5px; margin-bottom: 1rem; border: 1px solid #f5c6cb;">
+                <h4>⚠️ Error Loading Teams</h4>
+                <p th:text="${error}">Error message</p>
+                <p><strong>Troubleshooting:</strong></p>
+                <ul>
+                    <li>Check if the database is running and accessible</li>
+                    <li>Verify tenant configuration is correct</li>
+                    <li>Try switching to a different tenant using the dropdown above</li>
+                    <li>Use the REST API at <code>/api/teams</code> to test data access</li>
+                </ul>
+            </div>
+            
+            <div class="teams-grid" th:if="${teams != null and !teams.empty}">
+                <div class="team-card" th:each="team : ${teams}">
+                    <h3 th:text="${team.name}">Team Name</h3>
+                    <p th:if="${team.city}" th:text="'City: ' + ${team.city}">City</p>
+                    <p th:if="${team.players}" th:text="'Players: ' + ${#lists.size(team.players)}">Players: 0</p>
+                    <div class="card-actions">
+                        <a th:href="@{/teams/{id}(id=${team.id})}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="empty-state" th:if="${teams != null and teams.empty and error == null}">
+                <h3>No Teams Found</h3>
+                <p>There are currently no teams in the system for tenant: <strong th:text="${currentTenant}">current tenant</strong></p>
+                <p>Use the REST API at <code>/api/teams</code> to add teams.</p>
+            </div>
+            
+            <div class="api-info">
+                <h3>API Access</h3>
+                <p>You can also manage teams programmatically:</p>
+                <ul>
+                    <li><strong>GET</strong> <code>/api/teams</code> - List all teams</li>
+                    <li><strong>POST</strong> <code>/api/teams</code> - Create a new team</li>
+                    <li><strong>GET</strong> <code>/api/teams/{id}</code> - Get team by ID</li>
+                    <li><strong>PUT</strong> <code>/api/teams/{id}</code> - Update team</li>
+                    <li><strong>DELETE</strong> <code>/api/teams/{id}</code> - Delete team</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Cricket Tournament Management System</p>
+        </footer>
+    </div>
+    <script th:src="@{/js/tenant-switcher.js}"></script>
+</body>
+</html>

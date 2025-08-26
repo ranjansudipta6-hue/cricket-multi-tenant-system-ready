@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${team.name} + ' - Cricket Tournament Management'">Team Detail</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Cricket Tournament Management System</h1>
+                    <nav>
+                        <a href="/" class="nav-link">Home</a>
+                        <a href="/teams" class="nav-link">Teams</a>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div class="tenant-selector" th:if="${availableTenants != null and !availableTenants.empty}">
+                        <label for="tenantSelect">Tenant:</label>
+                        <form id="tenantForm" method="post" action="/switch-tenant">
+                            <select id="tenantSelect" name="tenantId" onchange="switchTenant()">
+                                <option th:each="tenant : ${availableTenants}" 
+                                        th:value="${tenant.id}" 
+                                        th:text="${tenant.id}"
+                                        th:selected="${tenant.id == currentTenant}">
+                                    Tenant
+                                </option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="page-header">
+                <h2 th:text="${team.name}">Team Name</h2>
+                <a href="/teams" class="btn btn-secondary">← Back to Teams</a>
+            </div>
+            
+            <div class="team-details">
+                <div class="detail-card">
+                    <h3>Team Information</h3>
+                    <div class="detail-row">
+                        <strong>Team ID:</strong>
+                        <span th:text="${team.id}">1</span>
+                    </div>
+                    <div class="detail-row">
+                        <strong>Name:</strong>
+                        <span th:text="${team.name}">Team Name</span>
+                    </div>
+                    <div class="detail-row" th:if="${team.city}">
+                        <strong>City:</strong>
+                        <span th:text="${team.city}">City Name</span>
+                    </div>
+                </div>
+                
+                <div class="detail-card" th:if="${team.players != null and !team.players.empty}">
+                    <h3>Players</h3>
+                    <div class="players-list">
+                        <div class="player-item" th:each="player : ${team.players}">
+                            <div class="player-info">
+                                <strong th:text="${player.fullName}">Player Name</strong>
+                                <span th:if="${player.role}" th:text="'(' + ${player.role} + ')'">Role</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="detail-card" th:if="${team.players == null or team.players.empty}">
+                    <h3>Players</h3>
+                    <p>No players registered for this team yet.</p>
+                </div>
+            </div>
+            
+            <div class="api-info">
+                <h3>API Access</h3>
+                <p>Manage this team via REST API:</p>
+                <ul>
+                    <li><strong>GET</strong> <code th:text="'/api/teams/' + ${team.id}">/api/teams/{id}</code> - Get team details</li>
+                    <li><strong>PUT</strong> <code th:text="'/api/teams/' + ${team.id}">/api/teams/{id}</code> - Update team</li>
+                    <li><strong>DELETE</strong> <code th:text="'/api/teams/' + ${team.id}">/api/teams/{id}</code> - Delete team</li>
+                </ul>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Cricket Tournament Management System</p>
+        </footer>
+    </div>
+    <script th:src="@{/js/tenant-switcher.js}"></script>
+</body>
+</html>

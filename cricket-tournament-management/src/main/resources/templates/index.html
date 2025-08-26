@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cricket Tournament Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="header-left">
+                    <h1>Cricket Tournament Management System</h1>
+                    <nav>
+                        <a href="/" class="nav-link">Home</a>
+                        <a href="/teams" class="nav-link">Teams</a>
+                    </nav>
+                </div>
+                <div class="header-right">
+                    <div class="tenant-selector" th:if="${availableTenants != null and !availableTenants.empty}">
+                        <label for="tenantSelect">Tenant:</label>
+                        <form id="tenantForm" method="post" action="/switch-tenant">
+                            <select id="tenantSelect" name="tenantId" onchange="switchTenant()">
+                                <option th:each="tenant : ${availableTenants}" 
+                                        th:value="${tenant.id}" 
+                                        th:text="${tenant.id}"
+                                        th:selected="${tenant.id == currentTenant}">
+                                    Tenant
+                                </option>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <main>
+            <div class="hero">
+                <h2>Welcome to Cricket Tournament Management</h2>
+                <p>Manage your cricket tournaments with ease. Track teams, players, and matches all in one place.</p>
+                
+                <div class="features">
+                    <div class="feature-card">
+                        <h3>Team Management</h3>
+                        <p>Create and manage cricket teams with detailed player information.</p>
+                        <a href="/teams" class="btn btn-primary">View Teams</a>
+                    </div>
+                    
+                    <div class="feature-card">
+                        <h3>REST API</h3>
+                        <p>Access data programmatically through our comprehensive REST API.</p>
+                        <a href="/api/teams" class="btn btn-secondary">API Endpoint</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>&copy; 2025 Cricket Tournament Management System</p>
+        </footer>
+    </div>
+    <script th:src="@{/js/tenant-switcher.js}"></script>
+</body>
+</html>

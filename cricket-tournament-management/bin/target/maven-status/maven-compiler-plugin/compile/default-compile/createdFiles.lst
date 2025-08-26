@@ -1,0 +1,11 @@
+com\cricket\controller\TeamController.class
+com\cricket\entity\Player.class
+com\cricket\CricketTournamentApplication.class
+com\cricket\repository\PlayerRepository.class
+com\cricket\entity\Team.class
+com\cricket\repository\MatchRepository.class
+com\cricket\repository\TeamRepository.class
+com\cricket\service\TeamService.class
+com\cricket\repository\TournamentRepository.class
+com\cricket\entity\Tournament.class
+com\cricket\entity\Match.class
