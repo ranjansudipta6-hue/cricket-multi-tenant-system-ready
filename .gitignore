@@ -1,0 +1,3 @@
+# Project exclude paths
+/cricket-tournament-management/target/
+/multi-tenant-transaction-manager/target/
